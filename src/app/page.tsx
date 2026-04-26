@@ -1,278 +1,213 @@
 "use client";
 
 import { Button } from "@/components/ui/Button";
-import { motion } from "framer-motion";
-import { ArrowRight, Brain, Heart, Users, CheckCircle2, Star, Quote } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight, Plus, Minus, Star, Quote } from "lucide-react";
 import Link from "next/link";
 import { BookingCalendar } from "@/components/BookingCalendar";
 import { format } from "date-fns";
-import React from "react";
+import React, { useState } from "react";
+import Image from "next/image";
+
+const SERVICES = [
+  {
+    id: "01",
+    title: "ONLINE SESSIONS",
+    description: "Flexible psychological support from the comfort of your home. We provide evidence-based therapies including CBT and ACT via secure video platforms, ensuring accessibility and privacy regardless of your location.",
+  },
+  {
+    id: "02",
+    title: "CHILD & ADOLESCENT",
+    description: "Specialized support for young people facing anxiety, performance pressure, or neurodevelopmental challenges. We work collaboratively with families and schools to provide holistic care tailored to developmental needs.",
+  },
+  {
+    id: "03",
+    title: "DIAGNOSTIC ASSESSMENTS",
+    description: "Comprehensive assessments for Autism Spectrum Disorder (ASD), ADHD, and Tourette Syndrome. Following gold-standard clinical guidelines (ADOS-2), we provide clear diagnostic formulation and support pathways.",
+  },
+  {
+    id: "04",
+    title: "ADULT MENTAL HEALTH",
+    description: "Expert treatment for complex mental health needs including PTSD, trauma, OCD, and clinical depression. Our psychologists utilize specialized models like EMDR to support long-term recovery and resilience.",
+  }
+];
 
 const TESTIMONIALS = [
   {
-    name: "Sarah Jenkins",
-    role: "Parent",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop",
-    text: "The support our daughter received for her anxiety was life-changing. The clinicians are incredibly compassionate and professional.",
-    rating: 5
+    name: "SARAH JENKINS",
+    role: "PARENT",
+    text: "THE SUPPORT OUR DAUGHTER RECEIVED WAS LIFE-CHANGING. THE CLINICIANS ARE INCREDIBLY COMPASSIONATE AND PROFESSIONAL.",
   },
   {
-    name: "David Thompson",
-    role: "Adult Client",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop",
-    text: "I was hesitant about therapy, but the evidence-based approach used here really resonated with me. I've seen massive improvements in my daily life.",
-    rating: 5
+    name: "DAVID THOMPSON",
+    role: "ADULT CLIENT",
+    text: "I WAS HESITANT ABOUT THERAPY, BUT THE EVIDENCE-BASED APPROACH USED HERE REALLY RESONATED WITH ME.",
   },
   {
-    name: "Emma O'Neill",
-    role: "Adolescent Client",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop",
-    text: "A safe space where I felt truly heard. The tools I learned for managing stress have been invaluable for my university studies.",
-    rating: 5
+    name: "EMMA O'NEILL",
+    role: "ADOLESCENT CLIENT",
+    text: "A SAFE SPACE WHERE I FELT TRULY HEARD. THE TOOLS I LEARNED FOR MANAGING STRESS HAVE BEEN INVALUABLE.",
   }
 ];
 
 export default function Home() {
+  const [openService, setOpenService] = useState<string | null>("01");
   const [selectedDate, setSelectedDate] = React.useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = React.useState<string | null>(null);
 
   return (
-    <div className="flex flex-col w-full">
-      {/* Hero Section */}
-      <section className="relative min-h-[85vh] flex items-center bg-[#fdfdfd]">
-        <div className="container mx-auto px-4 py-12 md:py-20 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center lg:text-left"
-          >
-            <div className="inline-block px-3 py-1 bg-accent/10 text-accent text-[10px] md:text-xs font-bold tracking-widest uppercase rounded-full mb-6">
-              Welcome to Belfast Psychology Services
-            </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tighter mb-6 md:mb-8 text-primary">
-              Compassionate Therapy for a <span className="text-accent">Brighter Future.</span>
-            </h1>
-            <p className="text-base md:text-lg text-gray-600 mb-8 md:mb-10 max-w-xl mx-auto lg:mx-0 leading-relaxed">
-              We provide psychological therapy and counselling to children, young people and adults. Our HCPC registered clinical psychologists offer professional support for stress, anxiety, depression, and trauma.
+    <div className="flex flex-col w-full bg-white">
+      {/* Hero Section - Bold All-Caps */}
+      <section className="min-h-screen flex flex-col items-center justify-center text-center px-4 py-32 border-b border-black">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="max-w-6xl"
+        >
+          <div className="inline-block px-4 py-1 border border-black text-[10px] font-black tracking-[0.3em] uppercase mb-12">
+            YOUR MENTAL HEALTH MATTERS
+          </div>
+          <h1 className="text-[12vw] md:text-[10vw] lg:text-[110px] mb-12">
+            COMPASSIONATE <br />
+            THERAPY FOR A <br />
+            <span className="bg-black text-white px-4">BRIGHTER FUTURE</span>
+          </h1>
+          <div className="flex flex-col items-center gap-8">
+            <p className="max-w-xl text-sm md:text-base font-medium leading-relaxed uppercase tracking-tight">
+              WE PROVIDE PSYCHOLOGICAL THERAPY AND COUNSELLING TO CHILDREN, YOUNG PEOPLE AND ADULTS. OUR HCPC REGISTERED CLINICAL PSYCHOLOGISTS OFFER PROFESSIONAL SUPPORT FOR STRESS, ANXIETY, DEPRESSION, AND TRAUMA.
             </p>
-            <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
               <Button 
                 size="lg" 
-                className="group shadow-lg shadow-accent/20 w-full sm:w-auto"
-                onClick={() => document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' })}
+                className="bg-black text-white hover:bg-black/90 px-12 py-8 text-xs font-black tracking-widest uppercase border-2 border-black hover:bg-white hover:text-black transition-all duration-300"
+                onClick={() => window.dispatchEvent(new CustomEvent("toggle-booking-agent"))}
               >
-                Book a Consultation Call
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                Book a consultation call
               </Button>
-              <Link href="/services" className="w-full sm:w-auto">
-                <Button size="lg" variant="outline" className="border-gray-200 w-full">Our Services</Button>
-              </Link>
-            </div>
-          </motion.div>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Services Section - Accordion Style */}
+      <section className="py-32 border-b border-black">
+        <div className="container-custom">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-20 gap-8">
+            <h2 className="text-6xl md:text-8xl">WHAT <br />I DO</h2>
+            <Link href="/services" className="text-xs font-black tracking-widest border-b-2 border-black pb-1 hover:text-muted hover:border-muted transition-all">
+              VIEW ALL SERVICES
+            </Link>
+          </div>
           
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative hidden lg:block"
-          >
-            <div className="aspect-[4/3] bg-gray-50 rounded-[2rem] overflow-hidden border border-gray-100 shadow-sm relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent" />
-              <div className="flex items-center justify-center h-full text-accent/10">
-                <Brain className="w-full h-full p-12" />
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Philosophy Section */}
-      <section className="py-16 md:py-24 bg-white border-y border-gray-50">
-        <div className="container mx-auto px-4 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="max-w-3xl mx-auto"
-          >
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 md:mb-8 text-primary">Our Therapeutic Approach</h2>
-            <p className="text-base md:text-lg text-gray-600 leading-relaxed italic">
-              &quot;Through various psychotherapy methods and collaborative techniques, we help you learn skills to cope with life’s obstacles. We offer bespoke treatment packages to support children, adolescents, adults and families.&quot;
-            </p>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Services Grid */}
-      <section className="py-16 md:py-24 bg-gray-50/50">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            <motion.div 
-              whileHover={{ y: -8, transition: { duration: 0.3 } }}
-              className="bg-white p-8 md:p-10 rounded-3xl border border-gray-100 shadow-sm hover:shadow-2xl hover:shadow-accent/5 transition-all group"
-            >
-              <Users className="text-accent mb-4 md:mb-6 group-hover:scale-110 transition-transform duration-300" size={32} />
-              <h3 className="text-lg md:text-xl font-bold mb-3 md:mb-4">Children & Adolescents</h3>
-              <p className="text-gray-500 text-xs md:text-sm leading-relaxed mb-4 md:mb-6">
-                Support for performance anxiety, perfectionism, self-esteem issues, and neurodevelopmental disorders like Tourette Syndrome.
-              </p>
-              <Link href="/services" className="text-accent text-[10px] md:text-sm font-bold uppercase tracking-wider hover:underline">Learn More</Link>
-            </motion.div>
-            <motion.div 
-              whileHover={{ y: -8, transition: { duration: 0.3 } }}
-              className="bg-white p-8 md:p-10 rounded-3xl border border-gray-100 shadow-sm hover:shadow-2xl hover:shadow-accent/5 transition-all group"
-            >
-              <Brain className="text-accent mb-4 md:mb-6 group-hover:scale-110 transition-transform duration-300" size={32} />
-              <h3 className="text-lg md:text-xl font-bold mb-3 md:mb-4">Adult Mental Health</h3>
-              <p className="text-gray-500 text-xs md:text-sm leading-relaxed mb-4 md:mb-6">
-                Evidence-based treatments for generalized anxiety, panic attacks, phobias, sleep disorders, and PTSD.
-              </p>
-              <Link href="/services" className="text-accent text-[10px] md:text-sm font-bold uppercase tracking-wider hover:underline">Learn More</Link>
-            </motion.div>
-            <motion.div 
-              whileHover={{ y: -8, transition: { duration: 0.3 } }}
-              className="bg-white p-8 md:p-10 rounded-3xl border border-gray-100 shadow-sm hover:shadow-2xl hover:shadow-accent/5 transition-all group"
-            >
-              <Heart className="text-accent mb-4 md:mb-6 group-hover:scale-110 transition-transform duration-300" size={32} />
-              <h3 className="text-lg md:text-xl font-bold mb-3 md:mb-4">Bespoke Therapies</h3>
-              <p className="text-gray-500 text-xs md:text-sm leading-relaxed mb-4 md:mb-6">
-                Specialized approaches including CBT, EMDR, Acceptance & Commitment Therapy (ACT), and Mindfulness.
-              </p>
-              <Link href="/services" className="text-accent text-[10px] md:text-sm font-bold uppercase tracking-wider hover:underline">Learn More</Link>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Conditions Checklist */}
-      <section className="py-24 bg-primary text-white">
-        <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <h2 className="text-4xl font-bold mb-8">Specialized Support For...</h2>
-              <div className="grid sm:grid-cols-2 gap-4">
-                {[
-                  "Stress & Anxiety", "Depression", "Panic Attacks", 
-                  "Anger Management", "Phobias", "OCD", "Trauma & PTSD", 
-                  "Tourette Syndrome", "Vocal & Motor Tics", "Self-Harm",
-                  "Autism Assessments", "Sleep Disorders"
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    <div className="h-2 w-2 bg-blue-400 rounded-full" />
-                    <span className="text-gray-300 text-sm">{item}</span>
+          <div className="border-t border-black">
+            {SERVICES.map((service) => (
+              <div key={service.id} className="border-b border-black group">
+                <button
+                  onClick={() => setOpenService(openService === service.id ? null : service.id)}
+                  className="w-full py-10 flex items-center justify-between text-left group-hover:bg-gray-50 transition-colors px-4"
+                >
+                  <div className="flex items-center gap-12">
+                    <span className="text-xs font-black tracking-widest text-muted">{service.id}</span>
+                    <h3 className="text-3xl md:text-5xl">{service.title}</h3>
                   </div>
-                ))}
-              </div>
-            </div>
-            <div className="bg-white/5 border border-white/10 p-10 rounded-3xl backdrop-blur-sm">
-              <h3 className="text-2xl font-bold mb-6">Our Aim</h3>
-              <p className="text-gray-300 leading-relaxed mb-8">
-                To provide a local service which is compassionate and professional. We offer flexible session times, including evening and weekend appointments to make it easier to book an appointment at a time that suits you.
-              </p>
-              <Link href="/contact">
-                <Button className="bg-white text-primary hover:bg-gray-100">Contact Us Today</Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials Section */}
-      <section className="py-24 bg-gray-50/50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">What Our Clients Say</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              We take pride in providing a compassionate service that makes a real difference in people&apos;s lives.
-            </p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            {TESTIMONIALS.map((testimonial, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm relative"
-              >
-                <div className="absolute top-8 right-8 text-accent/10">
-                  <Quote size={40} />
-                </div>
-                <div className="flex gap-1 mb-6">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} size={16} className="fill-yellow-400 text-yellow-400" />
-                  ))}
-                </div>
-                <p className="text-gray-600 mb-8 leading-relaxed italic">
-                  &quot;{testimonial.text}&quot;
-                </p>
-                <div className="flex items-center gap-4">
-                  <img 
-                    src={testimonial.image} 
-                    alt={testimonial.name}
-                    className="w-12 h-12 rounded-full object-crop grayscale hover:grayscale-0 transition-all duration-500 shadow-md"
-                  />
-                  <div>
-                    <h4 className="font-bold text-primary">{testimonial.name}</h4>
-                    <p className="text-xs text-accent font-bold uppercase tracking-widest">{testimonial.role}</p>
+                  <div className="h-12 w-12 border-2 border-black flex items-center justify-center">
+                    {openService === service.id ? <Minus size={24} /> : <Plus size={24} />}
                   </div>
-                </div>
-              </motion.div>
+                </button>
+                <AnimatePresence>
+                  {openService === service.id && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.4, ease: "easeInOut" }}
+                      className="overflow-hidden"
+                    >
+                      <div className="pb-12 pl-16 md:pl-28 pr-12 max-w-4xl">
+                        <p className="text-base md:text-lg font-medium leading-relaxed uppercase tracking-tight text-muted">
+                          {service.description}
+                        </p>
+                        <Link href="/services" className="inline-flex items-center gap-2 mt-8 text-xs font-black tracking-widest group/link">
+                          LEARN MORE 
+                          <ArrowRight size={14} className="group-hover/link:translate-x-1 transition-transform" />
+                        </Link>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Booking Section */}
-      <section className="py-24 bg-white" id="booking">
-        <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-16 items-start">
-            <div>
-              <div className="inline-block px-3 py-1 bg-accent/10 text-accent text-xs font-bold tracking-widest uppercase rounded-full mb-6">
-                Online Booking
+      {/* Testimonials Section - Minimal Grid */}
+      <section className="py-32 bg-secondary border-b border-black">
+        <div className="container-custom">
+          <div className="text-center mb-24">
+            <h2 className="text-6xl md:text-8xl mb-8">HEAR FROM <br />OUR PEOPLE</h2>
+          </div>
+          <div className="grid md:grid-cols-3 gap-px bg-black border border-black">
+            {TESTIMONIALS.map((t, i) => (
+              <div key={i} className="bg-white p-12 flex flex-col justify-between min-h-[400px]">
+                <div>
+                  <div className="flex gap-1 mb-8">
+                    {[...Array(5)].map((_, i) => <Star key={i} size={14} fill="black" />)}
+                  </div>
+                  <p className="text-lg md:text-xl font-black leading-tight uppercase tracking-tighter">
+                    &quot;{t.text}&quot;
+                  </p>
+                </div>
+                <div className="mt-12">
+                  <p className="text-xs font-black tracking-[0.2em]">{t.name}</p>
+                  <p className="text-[10px] font-medium tracking-widest text-muted mt-1">{t.role}</p>
+                </div>
               </div>
-              <h2 className="text-4xl font-bold mb-8 text-primary">Schedule Your Consultation</h2>
-              <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-                Take the first step towards your wellbeing by booking a 15-minute consultation call. 
-                Select a date and time that works for you, and one of our clinical psychologists will 
-                reach out to discuss how we can support you.
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Booking Section - Bold Form */}
+      <section className="py-32" id="booking">
+        <div className="container-custom">
+          <div className="grid lg:grid-cols-2 gap-24 items-start">
+            <div>
+              <h2 className="text-6xl md:text-8xl mb-12">READY TO <br />START?</h2>
+              <p className="text-xl font-bold uppercase tracking-tight mb-12 max-w-md">
+                SELECT A DATE AND TIME FOR YOUR INITIAL 15-MINUTE CONSULTATION CALL WITH OUR CLINICAL TEAM.
               </p>
-              <div className="space-y-4">
+              <div className="space-y-6">
                 {[
-                  "Choose a date that suits your schedule",
-                  "Pick an available time slot",
-                  "Quick and secure booking process",
-                  "No immediate payment required"
+                  "HCPC REGISTERED EXPERTS",
+                  "CONFIDENTIAL SESSIONS",
+                  "FLEXIBLE SCHEDULING",
+                  "PRIVATE HEALTH INSURANCE APPROVED"
                 ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    <div className="h-5 w-5 bg-accent/20 text-accent rounded-full flex items-center justify-center">
-                      <CheckCircle2 size={12} />
-                    </div>
-                    <span className="text-gray-700">{item}</span>
+                  <div key={i} className="flex items-center gap-4 border-b border-black pb-4 font-black text-xs tracking-[0.1em]">
+                    <div className="h-2 w-2 bg-black" />
+                    {item}
                   </div>
                 ))}
               </div>
             </div>
-            <div className="relative">
-              <div className="absolute -inset-4 bg-accent/5 rounded-[2.5rem] -z-10 blur-2xl" />
+            <div className="border-[4px] border-black p-8 md:p-12 shadow-[16px_16px_0px_0px_rgba(0,0,0,1)]">
               <BookingCalendar onSelect={(date, time) => {
                 setSelectedDate(date);
                 setSelectedTime(time);
               }} />
               {selectedDate && selectedTime && (
                 <motion.div 
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mt-6 p-6 bg-primary text-white rounded-2xl shadow-xl flex items-center justify-between"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="mt-12 bg-black text-white p-8 flex flex-col md:flex-row items-center justify-between gap-6"
                 >
-                  <div>
-                    <div className="text-xs uppercase tracking-widest opacity-60 mb-1">Selected Slot</div>
-                    <div className="font-bold">{format(selectedDate, "EEEE, MMMM do")} at {selectedTime}</div>
+                  <div className="text-center md:text-left">
+                    <p className="text-[10px] font-black tracking-[0.3em] opacity-60 mb-2">SELECTED SESSION</p>
+                    <p className="text-lg font-black">{format(selectedDate, "EEEE, MMMM do")} @ {selectedTime}</p>
                   </div>
                   <Button 
-                    className="bg-accent hover:bg-accent/90"
+                    size="sm"
+                    className="bg-white text-black hover:bg-gray-100 w-full md:w-auto px-12 h-14 font-black tracking-widest uppercase"
                     onClick={() => {
                       const event = new CustomEvent("open-booking", {
                         detail: { 
@@ -283,7 +218,7 @@ export default function Home() {
                       window.dispatchEvent(event);
                     }}
                   >
-                    Confirm Selection
+                    Confirm
                   </Button>
                 </motion.div>
               )}
@@ -291,8 +226,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* CTA Section */}
     </div>
   );
 }

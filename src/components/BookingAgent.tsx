@@ -7,28 +7,39 @@ import { Button } from "./ui/Button";
 import { BookingCalendar } from "./BookingCalendar";
 import { format } from "date-fns";
 
-type Step = "initial" | "calendar" | "name" | "phone" | "completed";
+type Step = "initial" | "calendar" | "name" | "phone" | "consent" | "completed";
 
 export function BookingAgent() {
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState<Step>("initial");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [consent, setConsent] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
   // Handle external booking requests
   React.useEffect(() => {
     const handleExternalBooking = (e: any) => {
-      const { date, time } = e.detail;
-      setSelectedDate(new Date(date));
-      setSelectedTime(time);
-      setIsOpen(true);
-      setStep("name");
+      const { date, time } = e.detail || {};
+      if (date && time) {
+        setSelectedDate(new Date(date));
+        setSelectedTime(time);
+        setIsOpen(true);
+        setStep("name");
+      } else {
+        setIsOpen(true);
+      }
     };
 
+    const handleToggle = () => setIsOpen(true);
+
     window.addEventListener("open-booking", handleExternalBooking);
-    return () => window.removeEventListener("open-booking", handleExternalBooking);
+    window.addEventListener("toggle-booking-agent", handleToggle);
+    return () => {
+      window.removeEventListener("open-booking", handleExternalBooking);
+      window.removeEventListener("toggle-booking-agent", handleToggle);
+    };
   }, []);
 
   const handleStart = () => setStep("calendar");
@@ -44,19 +55,30 @@ export function BookingAgent() {
 
   const handleNameSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (name.trim()) setStep("phone");
+    if (name.trim().length > 2) setStep("phone");
   };
 
   const handlePhoneSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (phone.trim()) {
-      // Here you would typically call an API to save the appointment
+    if (phone.trim().length > 9) setStep("consent");
+  };
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleConsentSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (consent) {
+      setIsSubmitting(true);
+      // Snappier simulated API call
+      await new Promise(resolve => setTimeout(resolve, 600));
+      
       console.log("Appointment requested:", { 
         name, 
         phone, 
         date: selectedDate ? format(selectedDate, "yyyy-MM-dd") : null,
         time: selectedTime 
       });
+      setIsSubmitting(false);
       setStep("completed");
     }
   };
@@ -67,6 +89,8 @@ export function BookingAgent() {
       setStep("initial");
       setName("");
       setPhone("");
+      setConsent(false);
+      setIsSubmitting(false);
       setSelectedDate(null);
       setSelectedTime(null);
     }, 500);
@@ -129,7 +153,7 @@ export function BookingAgent() {
                       </button>
                       <div className="flex items-center gap-3 text-accent">
                         <CalendarIcon size={20} />
-                        <span className="text-sm font-bold uppercase tracking-wider">Step 1 of 3</span>
+                        <span className="text-sm font-bold uppercase tracking-wider">Step 1 of 4</span>
                       </div>
                     </div>
                     <BookingCalendar onSelect={handleDateSelect} />
@@ -159,7 +183,7 @@ export function BookingAgent() {
                       </button>
                       <div className="flex items-center gap-3 text-accent">
                         <User size={20} />
-                        <span className="text-sm font-bold uppercase tracking-wider">Step 2 of 3</span>
+                        <span className="text-sm font-bold uppercase tracking-wider">Step 2 of 4</span>
                       </div>
                     </div>
                     <p className="text-primary font-bold">What is your full name?</p>
@@ -172,7 +196,7 @@ export function BookingAgent() {
                       placeholder="e.g. John Doe"
                       className="w-full border-b-2 border-gray-100 py-2 focus:border-accent outline-none transition-colors"
                     />
-                    <Button type="submit" className="w-full">Next</Button>
+                    <Button type="submit" disabled={name.trim().length < 3} className="w-full">Next</Button>
                   </motion.form>
                 )}
 
@@ -192,7 +216,7 @@ export function BookingAgent() {
                       </button>
                       <div className="flex items-center gap-3 text-accent">
                         <Phone size={20} />
-                        <span className="text-sm font-bold uppercase tracking-wider">Step 3 of 3</span>
+                        <span className="text-sm font-bold uppercase tracking-wider">Step 3 of 4</span>
                       </div>
                     </div>
                     <p className="text-primary font-bold">Nice to meet you, {name.split(' ')[0]}. Phone number?</p>
@@ -205,7 +229,46 @@ export function BookingAgent() {
                       placeholder="07700 000000"
                       className="w-full border-b-2 border-gray-100 py-2 focus:border-accent outline-none transition-colors"
                     />
-                    <Button type="submit" className="w-full">Finish Booking</Button>
+                    <Button type="submit" disabled={phone.trim().length < 10} className="w-full">Next</Button>
+                  </motion.form>
+                )}
+
+                {step === "consent" && (
+                  <motion.form
+                    key="consent"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    onSubmit={handleConsentSubmit}
+                    className="space-y-6 py-8"
+                  >
+                    <div className="flex items-center justify-between mb-4">
+                      <button type="button" onClick={() => setStep("phone")} className="flex items-center gap-1 text-gray-400 hover:text-primary transition-colors text-sm font-medium">
+                        <ChevronLeft size={16} />
+                        Back
+                      </button>
+                      <div className="flex items-center gap-3 text-accent">
+                        <Shield size={20} />
+                        <span className="text-sm font-bold uppercase tracking-wider">Final Step</span>
+                      </div>
+                    </div>
+                    <div className="bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                      <div className="flex items-start gap-3">
+                        <input
+                          id="consent"
+                          type="checkbox"
+                          checked={consent}
+                          onChange={(e) => setConsent(e.target.checked)}
+                          className="mt-1 h-4 w-4 rounded border-gray-300 text-accent focus:ring-accent"
+                        />
+                        <label htmlFor="consent" className="text-xs text-gray-600 leading-relaxed">
+                          I consent to Belfast Psychology Services processing my data in accordance with their <a href="/privacy" className="text-accent underline">Privacy Policy</a>. I understand this information is used solely to contact me regarding my consultation.
+                        </label>
+                      </div>
+                    </div>
+                    <Button type="submit" disabled={!consent || isSubmitting} className="w-full shadow-lg shadow-accent/20">
+                      {isSubmitting ? "Processing..." : "Finish Booking"}
+                    </Button>
                   </motion.form>
                 )}
 

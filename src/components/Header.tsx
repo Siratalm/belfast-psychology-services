@@ -53,9 +53,13 @@ export function Header() {
         </nav>
 
         <div className="hidden lg:flex items-center gap-4">
-          <Link href="/contact">
-            <Button size="sm">Book a Consultation</Button>
-          </Link>
+          <Button 
+            size="sm" 
+            className="border-2 border-black font-black uppercase text-[10px] tracking-widest"
+            onClick={() => window.dispatchEvent(new CustomEvent("toggle-booking-agent"))}
+          >
+            Book a Consultation
+          </Button>
         </div>
 
         {/* Mobile Menu Button */}

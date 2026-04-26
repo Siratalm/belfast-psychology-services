@@ -19,6 +19,8 @@ import {
 import { ChevronLeft, ChevronRight, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+import { getDefaultSelectedDate, isSlotInPast } from "@/lib/date-utils";
+
 interface BookingCalendarProps {
   onSelect?: (date: Date, time: string) => void;
 }
@@ -43,15 +45,8 @@ export function BookingCalendar({ onSelect }: BookingCalendarProps) {
   // Fix: Default to tomorrow if today is past booking hours
   React.useEffect(() => {
     setMounted(true);
-    const now = new Date();
     const lastSlot = TIME_SLOTS[TIME_SLOTS.length - 1];
-    const [hours, minutes] = lastSlot.split(":").map(Number);
-    const lastSlotToday = new Date();
-    lastSlotToday.setHours(hours, minutes, 0, 0);
-
-    if (isBefore(lastSlotToday, now)) {
-      setSelectedDate(addDays(startOfDay(now), 1));
-    }
+    setSelectedDate(getDefaultSelectedDate(new Date(), lastSlot));
   }, []);
 
   const nextMonth = () => setCurrentMonth(addMonths(currentMonth, 1));
@@ -66,18 +61,20 @@ export function BookingCalendar({ onSelect }: BookingCalendarProps) {
   const renderHeader = () => {
     return (
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-primary">
+        <h2 className="text-xl font-bold text-primary" aria-live="polite">
           {format(currentMonth, "MMMM yyyy")}
         </h2>
         <div className="flex gap-2">
           <button
             onClick={prevMonth}
+            aria-label="Previous Month"
             className="p-2 hover:bg-gray-100 rounded-full transition-colors"
           >
             <ChevronLeft size={20} />
           </button>
           <button
             onClick={nextMonth}
+            aria-label="Next Month"
             className="p-2 hover:bg-gray-100 rounded-full transition-colors"
           >
             <ChevronRight size={20} />
@@ -90,9 +87,9 @@ export function BookingCalendar({ onSelect }: BookingCalendarProps) {
   const renderDays = () => {
     const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     return (
-      <div className="grid grid-cols-7 mb-2">
+      <div className="grid grid-cols-7 mb-2" role="row">
         {days.map((day) => (
-          <div key={day} className="text-center text-xs font-bold text-gray-400 uppercase tracking-widest">
+          <div key={day} className="text-center text-xs font-bold text-gray-400 uppercase tracking-widest" role="columnheader">
             {day}
           </div>
         ))}
@@ -112,7 +109,7 @@ export function BookingCalendar({ onSelect }: BookingCalendarProps) {
     });
 
     return (
-      <div className="grid grid-cols-7 gap-1">
+      <div className="grid grid-cols-7 gap-1" role="grid">
         {calendarDays.map((day) => {
           const isSelected = isSameDay(day, selectedDate);
           const isCurrentMonth = isSameMonth(day, monthStart);
@@ -127,6 +124,9 @@ export function BookingCalendar({ onSelect }: BookingCalendarProps) {
               key={day.toString()}
               disabled={isPast}
               onClick={() => onDateClick(day)}
+              aria-label={format(day, "MMMM d, yyyy")}
+              aria-pressed={isSelected}
+              aria-current={isSelected ? "date" : undefined}
               className={cn(
                 "h-10 w-full flex items-center justify-center rounded-lg text-sm transition-all",
                 !isCurrentMonth && "text-gray-300",
@@ -135,7 +135,7 @@ export function BookingCalendar({ onSelect }: BookingCalendarProps) {
                 !isSelected && isCurrentMonth && !isPast && "hover:bg-gray-100 text-gray-700"
               )}
             >
-              {format(day, "d")}
+              <span aria-hidden="true">{format(day, "d")}</span>
             </button>
           );
         })}
@@ -150,21 +150,15 @@ export function BookingCalendar({ onSelect }: BookingCalendarProps) {
     return (
       <div className="mt-8 border-t border-gray-100 pt-8">
         <div className="flex items-center gap-2 mb-4 text-primary font-bold">
-          <Clock size={18} />
-          <span>Available Times for {format(selectedDate, "MMM d")}</span>
+          <Clock size={18} aria-hidden="true" />
+          <span id="time-slots-label">Available Times for {format(selectedDate, "MMM d")}</span>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2" role="listbox" aria-labelledby="time-slots-label">
           {TIME_SLOTS.map((time) => {
-            const [hours, minutes] = time.split(":").map(Number);
-            const slotDateTime = new Date(selectedDate);
-            slotDateTime.setHours(hours, minutes, 0, 0);
-
             // Avoid hydration mismatch by only checking past slots on client
             let isPast = false;
             if (mounted) {
-              const now = new Date();
-              const bufferTime = new Date(now.getTime() + 30 * 60000);
-              isPast = isBefore(slotDateTime, bufferTime);
+              isPast = isSlotInPast(selectedDate, time, new Date());
             }
             
             const isBooked = bookedSlots.includes(time) || isPast;
@@ -173,6 +167,8 @@ export function BookingCalendar({ onSelect }: BookingCalendarProps) {
             return (
               <button
                 key={time}
+                role="option"
+                aria-selected={isSelected}
                 disabled={isBooked}
                 onClick={() => {
                   setSelectedTime(time);

@@ -2,11 +2,12 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #1a202c;
-  --primary: #2d3748;
-  --secondary: #edf2f7;
-  --accent: #3182ce; /* Trustworthy blue for psychological services */
-  --muted: #718096;
+  --foreground: #000000;
+  --primary: #000000;
+  --secondary: #f4f4f4;
+  --accent: #000000;
+  --muted: #666666;
+  --border: #e5e5e5;
 }
 
 @theme inline {
@@ -16,7 +17,8 @@
   --color-secondary: var(--secondary);
   --color-accent: var(--accent);
   --color-muted: var(--muted);
-  --font-sans: var(--font-geist-sans);
+  --color-border: var(--border);
+  --font-sans: "Inter", var(--font-geist-sans), ui-sans-serif, system-ui;
 }
 
 body {
@@ -28,6 +30,10 @@ body {
 
 @layer base {
   h1, h2, h3, h4 {
-    @apply font-semibold tracking-tight;
+    @apply font-black uppercase tracking-tighter leading-[0.9] text-primary;
   }
+}
+
+.container-custom {
+  @apply max-w-[1400px] mx-auto px-6 md:px-12;
 }
