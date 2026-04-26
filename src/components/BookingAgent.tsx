@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageSquare, X, User, Phone, CheckCircle2, Calendar as CalendarIcon, ChevronLeft } from "lucide-react";
+import { MessageSquare, X, User, Phone, CheckCircle2, Calendar as CalendarIcon, ChevronLeft, Shield } from "lucide-react";
 import { Button } from "./ui/Button";
 import { BookingCalendar } from "./BookingCalendar";
 import { format } from "date-fns";
