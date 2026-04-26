@@ -36,10 +36,10 @@ export function Header() {
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-black/5">
       <div className="max-w-[1440px] mx-auto px-6 h-20 flex items-center justify-between">
         {/* Logo Section */}
-        <div className="w-[280px] shrink-0">
+        <div className="w-auto sm:w-[280px] shrink-0">
           <Link href="/" className="flex flex-col leading-none z-50">
-            <span className="text-xl font-black tracking-tighter text-primary uppercase">Belfast Psychology</span>
-            <span className="text-xs font-bold text-accent tracking-[0.3em]">SERVICES</span>
+            <span className="text-lg sm:text-xl font-black tracking-tighter text-primary uppercase">Belfast Psychology</span>
+            <span className="text-[10px] sm:text-xs font-bold text-accent tracking-[0.3em]">SERVICES</span>
           </Link>
         </div>
 
@@ -71,11 +71,14 @@ export function Header() {
 
         {/* Mobile Menu Button - Show on anything smaller than xl */}
         <button 
-          className="xl:hidden p-2 text-primary z-50 focus:outline-none" 
+          className="xl:hidden p-2 text-primary z-50 focus:outline-none flex items-center gap-2" 
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Toggle menu"
         >
-          {isOpen ? <X size={28} /> : <Menu size={28} />}
+          <span className="text-[10px] font-black uppercase tracking-widest hidden sm:block">
+            {isOpen ? "Close" : "Menu"}
+          </span>
+          {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
@@ -83,51 +86,62 @@ export function Header() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, x: "100%" }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: "100%" }}
-            transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="xl:hidden fixed inset-0 bg-white z-40 flex flex-col p-8 pt-32 overflow-y-auto"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="xl:hidden fixed inset-0 bg-white z-40 flex flex-col p-6 pt-24 overflow-y-auto"
           >
-            <nav className="flex flex-col gap-8">
+            <nav className="flex flex-col">
               {NAV_LINKS.map((link, i) => (
                 <motion.div
                   key={link.name}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 + i * 0.05 }}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                  className="border-b border-black last:border-0"
                 >
                   <Link 
                     href={link.href} 
-                    className="text-4xl font-black text-primary hover:text-accent transition-colors uppercase tracking-tighter"
+                    className="flex items-center justify-between py-6 text-3xl font-black text-primary hover:text-accent transition-colors uppercase tracking-tighter"
                     onClick={() => setIsOpen(false)}
                   >
                     {link.name}
+                    <ArrowRight size={20} strokeWidth={3} className="opacity-20" />
                   </Link>
                 </motion.div>
               ))}
             </nav>
             
             <motion.div 
-              className="mt-16 pt-12 border-t border-black/5"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
+              className="mt-8 pt-8 border-t-[4px] border-black"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
             >
               <Button 
                 size="lg" 
-                className="w-full justify-between group py-8 px-8 h-auto border-2 border-black"
+                className="w-full justify-between group py-8 px-8 h-auto border-[3px] border-black bg-black text-white rounded-none"
                 onClick={() => {
                   setIsOpen(false);
                   window.dispatchEvent(new CustomEvent("toggle-booking-agent"));
                 }}
               >
-                <span className="font-black tracking-widest uppercase">Book a Consultation</span>
-                <ArrowRight className="group-hover:translate-x-1 transition-transform" />
+                <span className="font-black tracking-widest uppercase text-left">
+                  Request <br />Consultation
+                </span>
+                <ArrowRight size={32} className="group-hover:translate-x-2 transition-transform" />
               </Button>
-              <p className="mt-12 text-xs font-bold text-gray-400 text-center uppercase tracking-widest">
-                3 Wellington Park, Belfast • 02890 388345
-              </p>
+              
+              <div className="mt-12 grid grid-cols-2 gap-8">
+                <div>
+                  <p className="text-[10px] font-black text-muted uppercase tracking-widest mb-2">Location</p>
+                  <p className="text-xs font-bold leading-relaxed uppercase">3 Wellington Park, <br />Belfast, BT9 6DJ</p>
+                </div>
+                <div>
+                  <p className="text-[10px] font-black text-muted uppercase tracking-widest mb-2">Contact</p>
+                  <p className="text-xs font-bold leading-relaxed uppercase">02890 388345 <br />admin@bps.com</p>
+                </div>
+              </div>
             </motion.div>
           </motion.div>
         )}
