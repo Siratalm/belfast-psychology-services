@@ -34,29 +34,27 @@ export function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-black/5">
-      <div className="max-w-[1440px] mx-auto px-6 h-20 flex items-center justify-between">
+      <div className="max-w-[1440px] mx-auto px-6 h-20 flex items-center justify-between gap-4">
         {/* Logo Section */}
-        <div className="w-auto sm:w-[280px] shrink-0">
-          <Link href="/" className="flex flex-col leading-none z-50">
-            <span className="text-lg sm:text-xl font-black tracking-tighter text-primary uppercase">Belfast Psychology</span>
-            <span className="text-[10px] sm:text-xs font-bold text-accent tracking-[0.3em]">SERVICES</span>
-          </Link>
-        </div>
+        <Link href="/" className="flex flex-col leading-none z-50 shrink-0">
+          <span className="text-lg md:text-xl font-black tracking-tighter text-primary uppercase whitespace-nowrap">Belfast Psychology</span>
+          <span className="text-[10px] md:text-xs font-bold text-accent tracking-[0.2em]">SERVICES</span>
+        </Link>
 
-        {/* Desktop Nav - Switched to xl to prevent overlap */}
-        <nav className="hidden xl:flex items-center gap-4 text-xs font-black uppercase tracking-widest">
+        {/* Desktop Nav - Restored to lg breakpoint */}
+        <nav className="hidden lg:flex items-center gap-x-4 xl:gap-x-6 text-[10px] font-black uppercase tracking-widest">
           {NAV_LINKS.map((link) => (
             <Link 
               key={link.name} 
               href={link.href} 
-              className="text-gray-600 hover:text-black transition-colors whitespace-nowrap"
+              className="text-gray-500 hover:text-black transition-colors whitespace-nowrap"
             >
               {link.name}
             </Link>
           ))}
         </nav>
 
-        <div className="hidden xl:flex items-center gap-4 shrink-0">
+        <div className="hidden lg:flex items-center gap-4 shrink-0">
           <Button 
             size="sm" 
             className="border-2 border-black font-black uppercase text-[10px] tracking-widest px-6 h-11"
@@ -66,9 +64,9 @@ export function Header() {
           </Button>
         </div>
 
-        {/* Mobile Menu Button - Show on anything smaller than xl */}
+        {/* Mobile Menu Button - Show on anything smaller than lg */}
         <button 
-          className="xl:hidden p-2 text-primary z-50 focus:outline-none flex items-center gap-2" 
+          className="lg:hidden p-2 text-primary z-50 focus:outline-none flex items-center gap-2" 
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Toggle menu"
         >
@@ -86,7 +84,7 @@ export function Header() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="xl:hidden fixed inset-0 bg-white z-40 flex flex-col p-6 pt-24 overflow-y-auto"
+            className="lg:hidden fixed inset-0 bg-white z-40 flex flex-col p-6 pt-24 overflow-y-auto"
           >
             <nav className="flex flex-col">
               {NAV_LINKS.map((link, i) => (
