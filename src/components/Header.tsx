@@ -36,10 +36,10 @@ export function Header() {
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-black/5">
       <div className="max-w-[1440px] mx-auto px-6 h-20 flex items-center justify-between">
         {/* Logo Section */}
-        <div className="w-auto sm:w-[280px] shrink-0">
+        <div className="flex-1 shrink-0">
           <Link href="/" className="flex flex-col leading-none z-50">
-            <span className="text-lg sm:text-xl font-black tracking-tighter text-primary uppercase">Belfast Psychology</span>
-            <span className="text-[10px] sm:text-xs font-bold text-accent tracking-[0.3em]">SERVICES</span>
+            <span className="text-base sm:text-lg md:text-xl font-black tracking-tighter text-primary uppercase whitespace-nowrap">Belfast Psychology</span>
+            <span className="text-[9px] sm:text-xs font-bold text-accent tracking-[0.2em]">SERVICES</span>
           </Link>
         </div>
 
