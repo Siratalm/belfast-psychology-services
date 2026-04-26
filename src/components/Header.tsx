@@ -5,6 +5,7 @@ import { Button } from "./ui/Button";
 import { Menu, X, ArrowRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
   { name: "Services", href: "/services", showOnDesktop: true },
@@ -126,49 +127,6 @@ export function Header() {
               </Button>
               <p className="mt-12 text-xs font-bold text-gray-400 text-center uppercase tracking-widest">
                 3 Wellington Park, Belfast • 02890 388345
-              </p>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </header>
-  );
-}
-
-            <nav className="flex flex-col gap-6">
-              {NAV_LINKS.map((link, i) => (
-                <motion.div
-                  key={link.name}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 + i * 0.05 }}
-                >
-                  <Link 
-                    href={link.href} 
-                    className="text-3xl font-bold text-primary hover:text-accent transition-colors"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    {link.name}
-                  </Link>
-                </motion.div>
-              ))}
-            </nav>
-            
-            <motion.div 
-              className="mt-12 pt-8 border-t border-gray-100"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-            >
-              <Link href="/contact" onClick={() => setIsOpen(false)}>
-                <Button size="lg" className="w-full justify-between group">
-                  Book a Consultation Call
-                  <ArrowRight className="group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </Link>
-              <p className="mt-8 text-sm text-gray-500 text-center">
-                3 Wellington Park, Malone Road, Belfast<br />
-                02890 388345
               </p>
             </motion.div>
           </motion.div>
