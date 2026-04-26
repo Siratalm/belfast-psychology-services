@@ -68,10 +68,10 @@ export default function Home() {
           <div className="inline-block px-4 py-1 border border-black text-[10px] font-black tracking-[0.3em] uppercase mb-12">
             YOUR MENTAL HEALTH MATTERS
           </div>
-          <h1 className="text-[12vw] md:text-[10vw] lg:text-[110px] mb-12">
+          <h1 className="text-[11vw] md:text-[9vw] lg:text-[100px] mb-12 leading-[1.1]">
             COMPASSIONATE <br />
             THERAPY FOR A <br />
-            <span className="bg-black text-white px-4">BRIGHTER FUTURE</span>
+            <span className="bg-black text-white px-4 py-1 inline-block mt-2">BRIGHTER FUTURE</span>
           </h1>
           <div className="flex flex-col items-center gap-8">
             <p className="max-w-xl text-sm md:text-base font-medium leading-relaxed uppercase tracking-tight">

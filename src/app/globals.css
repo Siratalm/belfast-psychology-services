@@ -30,7 +30,7 @@ body {
 
 @layer base {
   h1, h2, h3, h4 {
-    @apply font-black uppercase tracking-tighter leading-[0.9] text-primary;
+    @apply font-black uppercase tracking-tighter leading-[1.1] text-primary;
   }
 }
 
