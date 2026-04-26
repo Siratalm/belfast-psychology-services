@@ -33,26 +33,26 @@ export function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
-      <div className="container mx-auto px-4 h-20 flex items-center justify-between">
-        <Link href="/" className="flex flex-col leading-none z-50">
+      <div className="container mx-auto px-4 h-20 flex items-center justify-between gap-4">
+        <Link href="/" className="flex flex-col leading-none z-50 shrink-0">
           <span className="text-xl font-bold tracking-tight text-primary uppercase">Belfast Psychology</span>
           <span className="text-sm font-medium text-accent">SERVICES</span>
         </Link>
 
-        {/* Desktop Nav */}
-        <nav className="hidden lg:flex items-center gap-6 text-sm font-medium">
+        {/* Desktop Nav - Switched to xl to prevent overlap */}
+        <nav className="hidden xl:flex items-center gap-4 text-xs font-black uppercase tracking-widest">
           {NAV_LINKS.map((link) => (
             <Link 
               key={link.name} 
               href={link.href} 
-              className="text-gray-600 hover:text-accent transition-colors"
+              className="text-gray-600 hover:text-black transition-colors whitespace-nowrap"
             >
               {link.name}
             </Link>
           ))}
         </nav>
 
-        <div className="hidden lg:flex items-center gap-4">
+        <div className="hidden xl:flex items-center gap-4 shrink-0">
           <Button 
             size="sm" 
             className="border-2 border-black font-black uppercase text-[10px] tracking-widest"
@@ -62,9 +62,9 @@ export function Header() {
           </Button>
         </div>
 
-        {/* Mobile Menu Button */}
+        {/* Mobile Menu Button - Show on anything smaller than xl */}
         <button 
-          className="lg:hidden p-2 text-primary z-50 focus:outline-none" 
+          className="xl:hidden p-2 text-primary z-50 focus:outline-none" 
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Toggle menu"
         >
@@ -80,7 +80,7 @@ export function Header() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="lg:hidden fixed inset-0 bg-white z-40 flex flex-col p-8 pt-32"
+            className="xl:hidden fixed inset-0 bg-white z-40 flex flex-col p-8 pt-32 overflow-y-auto"
           >
             <nav className="flex flex-col gap-6">
               {NAV_LINKS.map((link, i) => (
