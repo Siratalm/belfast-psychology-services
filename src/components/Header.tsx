@@ -8,13 +8,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
-  { name: "Services", href: "/services", showOnDesktop: true },
-  { name: "Therapists", href: "/therapists", showOnDesktop: true },
-  { name: "Fees", href: "/fees", showOnDesktop: true },
-  { name: "FAQ", href: "/faq", showOnDesktop: false },
-  { name: "About Us", href: "/about", showOnDesktop: false },
-  { name: "Join Our Team", href: "/join-the-service", showOnDesktop: false },
-  { name: "Contact", href: "/contact", showOnDesktop: true },
+  { name: "Services", href: "/services" },
+  { name: "Therapists", href: "/therapists" },
+  { name: "Fees", href: "/fees" },
+  { name: "FAQ", href: "/faq" },
+  { name: "About Us", href: "/about" },
+  { name: "Join Our Team", href: "/join-the-service" },
+  { name: "Contact", href: "/contact" },
 ];
 
 export function Header() {
@@ -36,30 +36,27 @@ export function Header() {
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-black/5">
       <div className="max-w-[1440px] mx-auto px-6 h-20 flex items-center justify-between">
         {/* Logo Section */}
-        <div className="flex-1 shrink-0">
+        <div className="w-auto sm:w-[280px] shrink-0">
           <Link href="/" className="flex flex-col leading-none z-50">
-            <span className="text-base sm:text-lg md:text-xl font-black tracking-tighter text-primary uppercase whitespace-nowrap">Belfast Psychology</span>
-            <span className="text-[9px] sm:text-xs font-bold text-accent tracking-[0.2em]">SERVICES</span>
+            <span className="text-lg sm:text-xl font-black tracking-tighter text-primary uppercase">Belfast Psychology</span>
+            <span className="text-[10px] sm:text-xs font-bold text-accent tracking-[0.3em]">SERVICES</span>
           </Link>
         </div>
 
-        {/* Desktop Nav - Centered and limited to prevent overlap */}
-        <nav className="hidden xl:flex flex-1 justify-center items-center gap-x-8 text-[10px] font-black uppercase tracking-widest">
+        {/* Desktop Nav - Switched to xl to prevent overlap */}
+        <nav className="hidden xl:flex items-center gap-4 text-xs font-black uppercase tracking-widest">
           {NAV_LINKS.map((link) => (
-            link.showOnDesktop && (
-              <Link 
-                key={link.name} 
-                href={link.href} 
-                className="text-gray-500 hover:text-black transition-colors whitespace-nowrap"
-              >
-                {link.name}
-              </Link>
-            )
+            <Link 
+              key={link.name} 
+              href={link.href} 
+              className="text-gray-600 hover:text-black transition-colors whitespace-nowrap"
+            >
+              {link.name}
+            </Link>
           ))}
         </nav>
 
-        {/* Action Button Section */}
-        <div className="w-[280px] hidden xl:flex justify-end items-center shrink-0">
+        <div className="hidden xl:flex items-center gap-4 shrink-0">
           <Button 
             size="sm" 
             className="border-2 border-black font-black uppercase text-[10px] tracking-widest px-6 h-11"
