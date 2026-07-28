@@ -1,8 +1,23 @@
-# Belfast Psychology Services
+# 🧠 Belfast Psychology Services
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38BDF8?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![Framer Motion](https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white)
 
-## Getting Started
+> A modern, accessible, and high-performance healthcare web platform built for Belfast Psychology Services. Features interactive booking UI, fluid animations, and responsive layouts.
+
+---
+
+## 📐 System Overview
+
+```mermaid
+graph TD
+    Client[📱 Client / Browser] --> UI[Next.js Frontend / App Router]
+    UI --> Motion[Framer Motion Animations]
+    UI --> Form[Form Handler / Contact Action]
+    Form --> API[API Route / Edge Function]
+    API --> Dispatch[Notification / Email Handler]
 
 First, run the development server:
 
